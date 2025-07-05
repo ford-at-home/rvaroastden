@@ -1,0 +1,129 @@
+{
+    "taskDefinition": {
+        "taskDefinitionArn": "arn:aws:ecs:us-east-1:418272766513:task-definition/SimulchaosStackSimulchaosTaskDef3D505BEE:1",
+        "containerDefinitions": [
+            {
+                "name": "discord-bot",
+                "image": "418272766513.dkr.ecr.us-east-1.amazonaws.com/cdk-hnb659fds-container-assets-418272766513-us-east-1:972d408817c59587f0a231290207e4868f91b4656d2e76d17e4c89f511fd2ff8",
+                "cpu": 0,
+                "links": [],
+                "portMappings": [],
+                "essential": true,
+                "entryPoint": [],
+                "command": [],
+                "environment": [
+                    {
+                        "name": "AWS_DEFAULT_REGION",
+                        "value": "us-east-1"
+                    },
+                    {
+                        "name": "SQS_QUEUE_URL",
+                        "value": "https://sqs.us-east-1.amazonaws.com/418272766513/simulchaos-messages"
+                    },
+                    {
+                        "name": "LOG_LEVEL",
+                        "value": "INFO"
+                    },
+                    {
+                        "name": "MEMORY_TABLE",
+                        "value": "SimulchaosMemory"
+                    }
+                ],
+                "environmentFiles": [],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "secrets": [
+                    {
+                        "name": "DISCORD_TOKEN",
+                        "valueFrom": "arn:aws:secretsmanager:us-east-1:418272766513:secret:simulchaos/discord:DISCORD_TOKEN::"
+                    }
+                ],
+                "dnsServers": [],
+                "dnsSearchDomains": [],
+                "extraHosts": [],
+                "dockerSecurityOptions": [],
+                "dockerLabels": {},
+                "ulimits": [],
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                        "awslogs-group": "/ecs/simulchaos-bot",
+                        "awslogs-region": "us-east-1",
+                        "awslogs-stream-prefix": "discord-bot"
+                    },
+                    "secretOptions": []
+                },
+                "healthCheck": {
+                    "command": [
+                        "CMD-SHELL",
+                        "python -c 'import requests; requests.get(\"http://localhost:8080/health\")'"
+                    ],
+                    "interval": 30,
+                    "timeout": 10,
+                    "retries": 3,
+                    "startPeriod": 60
+                },
+                "systemControls": [],
+                "credentialSpecs": []
+            }
+        ],
+        "family": "SimulchaosStackSimulchaosTaskDef3D505BEE",
+        "taskRoleArn": "arn:aws:iam::418272766513:role/SimulchaosStack-SimulchaosTaskRole3AA4F233-SU3eW7SqVzmB",
+        "executionRoleArn": "arn:aws:iam::418272766513:role/SimulchaosStack-SimulchaosExecutionRoleB927E8C5-IFP4d0sUnB9Y",
+        "networkMode": "awsvpc",
+        "revision": 1,
+        "volumes": [],
+        "status": "ACTIVE",
+        "requiresAttributes": [
+            {
+                "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+            },
+            {
+                "name": "ecs.capability.execution-role-awslogs"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+            },
+            {
+                "name": "ecs.capability.secrets.asm.environment-variables"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.task-iam-role"
+            },
+            {
+                "name": "ecs.capability.container-health-check"
+            },
+            {
+                "name": "ecs.capability.execution-role-ecr-pull"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+            },
+            {
+                "name": "ecs.capability.task-eni"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+            }
+        ],
+        "placementConstraints": [],
+        "compatibilities": [
+            "EC2",
+            "FARGATE"
+        ],
+        "requiresCompatibilities": [
+            "FARGATE"
+        ],
+        "cpu": "256",
+        "memory": "512",
+        "registeredAt": "2025-07-05T06:06:19.918000-04:00",
+        "registeredBy": "arn:aws:sts::418272766513:assumed-role/cdk-hnb659fds-cfn-exec-role-418272766513-us-east-1/AWSCloudFormation"
+    },
+    "tags": []
+}

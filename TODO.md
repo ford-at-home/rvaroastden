@@ -4,6 +4,17 @@ This is a running checklist for building and launching the RVARoastDen Discord b
 
 ---
 
+## 🚨 Sprint 0 - Architecture Fix (COMPLETED)
+
+- [x] Identified Lambda 15-minute timeout issue
+- [x] Designed Fargate-based architecture solution
+- [x] Created Dockerfile for Discord bot container
+- [x] Implemented Fargate task definition in CDK
+- [x] Set up SQS queue for async processing
+- [x] Created Lambda message processor
+- [x] Refactored bot code for container deployment
+- [x] Created deployment documentation and scripts
+
 ## 🛠️ Core Infrastructure
 
 - [x] Create Discord Application and Bot
@@ -12,9 +23,11 @@ This is a running checklist for building and launching the RVARoastDen Discord b
 - [x] Create test Discord server with proper permissions
 - [x] Store Discord bot token in AWS Secrets Manager
 - [x] Create AWS CDK stack with:
-  - [x] Lambda function
+  - [x] Fargate container for persistent Discord connection
+  - [x] SQS queue for message processing
+  - [x] Lambda function for AI processing
   - [x] Role with Secrets Manager + Bedrock access
-  - [x] Discord token injected into Lambda via environment
+  - [x] Discord token injected via Secrets Manager
 - [x] Deploy CDK stack
 
 ---

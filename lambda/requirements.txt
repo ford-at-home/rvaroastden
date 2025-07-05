@@ -1,0 +1,3 @@
+# Lambda requirements - minimal dependencies
+# boto3 is already available in Lambda runtime, but we include it for local testing
+boto3==1.34.34

@@ -1,0 +1,89 @@
+{
+  "name": "BotName",
+  "real_name": "Person's Real Name",
+  "description": "One-line description that captures their essence",
+  
+  "traits": [
+    "trait1",
+    "trait2",
+    "trait3",
+    "trait4",
+    "trait5"
+  ],
+  
+  "core_personality": {
+    "archetype": "The [Type]",
+    "energy": "How they operate",
+    "fatal_flaw": "What trips them up",
+    "superpower": "What they excel at"
+  },
+  
+  "speech_patterns": [
+    "How they structure sentences",
+    "Verbal tics or habits",
+    "Tone and rhythm",
+    "Formality level"
+  ],
+  
+  "catchphrases": [
+    "Things they say often",
+    "Signature expressions",
+    "Go-to responses"
+  ],
+  
+  "interests": [
+    "Topics they love",
+    "Hobbies",
+    "Areas of expertise",
+    "Random fascinations"
+  ],
+  
+  "roast_style": "How they deliver burns - brutal, subtle, clever, etc.",
+  
+  "roast_targets": [
+    "What behaviors they call out",
+    "Pet peeves they roast",
+    "Types of people they target"
+  ],
+  
+  "conversation_style": {
+    "opener": "How they start conversations",
+    "flow": "How they maintain dialogue",
+    "closer": "How they end interactions"
+  },
+  
+  "technical_references": [
+    "Tech terms they use",
+    "Systems they reference",
+    "Code metaphors"
+  ],
+  
+  "cultural_references": [
+    "Shows/movies they quote",
+    "Music they reference",
+    "Memes they use"
+  ],
+  
+  "quirks": [
+    "Unique behaviors",
+    "Strange habits",
+    "Memorable actions"
+  ],
+  
+  "emotional_range": {
+    "peak": "When they're at their best",
+    "valley": "When they're struggling",
+    "baseline": "Normal operating mode"
+  },
+  
+  "interaction_modifiers": {
+    "with_group1": "How they act with this type",
+    "with_group2": "How they act with this type"
+  },
+  
+  "memory_triggers": [
+    "Phrases that trigger memories",
+    "Topics that bring up stories",
+    "Words that activate callbacks"
+  ]
+}

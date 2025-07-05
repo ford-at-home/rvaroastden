@@ -1,5 +1,38 @@
 # Contributing Guide
 
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+1. **Python 3.11+**
+   ```bash
+   python3 --version  # Should be 3.11 or higher
+   ```
+
+2. **AWS CLI**
+   ```bash
+   brew install awscli
+   aws configure  # Set up your AWS credentials
+   ```
+
+3. **AWS CDK CLI**
+   ```bash
+   brew install aws-cdk
+   cdk --version  # Verify installation
+   ```
+
+4. **Node.js** (required for CDK)
+   ```bash
+   brew install node
+   node --version  # Verify installation
+   ```
+
+5. **Git**
+   ```bash
+   brew install git
+   git --version  # Verify installation
+   ```
+
 ## Development Setup
 
 1. **Clone the Repository**
@@ -12,15 +45,7 @@
    ```bash
    make venv
    make install
-   make pre-commit-setup
    ```
-
-3. **Configure AWS Credentials**
-   - Install AWS CLI
-   - Configure credentials:
-     ```bash
-     aws configure
-     ```
 
 ## Development Workflow
 
@@ -32,9 +57,9 @@
 2. **Make Changes**
    - Write code
    - Add tests
-   - Run pre-commit hooks:
+   - Run code quality checks:
      ```bash
-     pre-commit run --all-files
+     pytest tests/
      ```
 
 3. **Test Your Changes**
@@ -81,7 +106,7 @@ The project uses GitHub Actions for automated deployment. The workflow:
    - Pull requests to main branch
 
 2. **Test Job**:
-   - Runs pre-commit hooks
+   - Runs code quality checks
    - Executes tests
    - Must pass before deployment
 

@@ -1,0 +1,58 @@
+{
+    "family": "SimulchaosStackSimulchaosTaskDef3D505BEE",
+    "taskRoleArn": "arn:aws:iam::418272766513:role/SimulchaosStack-SimulchaosTaskRole3AA4F233-SU3eW7SqVzmB",
+    "executionRoleArn": "arn:aws:iam::418272766513:role/SimulchaosStack-SimulchaosExecutionRoleB927E8C5-IFP4d0sUnB9Y",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "containerDefinitions": [
+        {
+            "name": "discord-bot",
+            "image": "418272766513.dkr.ecr.us-east-1.amazonaws.com/cdk-hnb659fds-container-assets-418272766513-us-east-1:fixed-help-command",
+            "essential": true,
+            "environment": [
+                {
+                    "name": "AWS_DEFAULT_REGION",
+                    "value": "us-east-1"
+                },
+                {
+                    "name": "SQS_QUEUE_URL",
+                    "value": "https://sqs.us-east-1.amazonaws.com/418272766513/simulchaos-messages"
+                },
+                {
+                    "name": "LOG_LEVEL",
+                    "value": "INFO"
+                },
+                {
+                    "name": "MEMORY_TABLE",
+                    "value": "SimulchaosMemory"
+                }
+            ],
+            "secrets": [
+                {
+                    "name": "DISCORD_TOKEN",
+                    "valueFrom": "arn:aws:secretsmanager:us-east-1:418272766513:secret:simulchaos/discord:DISCORD_TOKEN::"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/simulchaos-bot",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "discord-bot"
+                }
+            },
+            "healthCheck": {
+                "command": [
+                    "CMD-SHELL",
+                    "python -c 'import socket; s=socket.socket(); s.settimeout(5); s.connect((\"localhost\", 8080)); s.close()'"
+                ],
+                "interval": 30,
+                "timeout": 10,
+                "retries": 3,
+                "startPeriod": 60
+            }
+        }
+    ]
+}

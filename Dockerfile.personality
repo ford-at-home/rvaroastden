@@ -1,0 +1,27 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy bot code
+COPY bot_container_personality.py .
+COPY personalities/ ./personalities/
+
+# Create non-root user
+RUN useradd -m -u 1000 discordbot && chown -R discordbot:discordbot /app
+
+USER discordbot
+
+# Health check endpoint runs on port 8080
+EXPOSE 8080
+
+# Run the personality-specific bot
+CMD ["python", "bot_container_personality.py"]

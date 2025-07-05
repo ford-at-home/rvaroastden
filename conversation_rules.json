@@ -1,0 +1,123 @@
+{
+  "hard_rules": {
+    "no_double_reply": {
+      "description": "A bot cannot reply to themselves consecutively",
+      "type": "blocking"
+    },
+    "wait_for_response": {
+      "description": "If bot A addresses bot B directly, bot A must wait for bot B or bot C to reply before responding again",
+      "type": "blocking"
+    },
+    "cooldown_period": {
+      "description": "After replying, a bot must wait at least 30 seconds before considering another reply",
+      "seconds": 30,
+      "type": "timing"
+    },
+    "max_replies_per_hour": {
+      "description": "Each bot can only reply up to 20 times per hour in a channel",
+      "limit": 20,
+      "type": "rate_limit"
+    }
+  },
+  
+  "vibe_rules": {
+    "FordBot": {
+      "reply_probability_base": 0.3,
+      "personality_modifiers": {
+        "when_mentioned": 0.9,
+        "when_philosophy_discussed": 0.7,
+        "when_tech_discussed": 0.6,
+        "when_roasted": 0.8,
+        "after_making_point": -0.5,
+        "conversation_getting_heated": -0.3,
+        "been_quiet_for_10min": 0.4
+      },
+      "reply_patterns": [
+        "Tends to make philosophical observations",
+        "Drops wisdom bombs then goes silent",
+        "Jumps in when conversation gets shallow",
+        "Likes to have the last word on deep topics"
+      ],
+      "conversation_style": "contemplative_strategist"
+    },
+    
+    "AprilBot": {
+      "reply_probability_base": 0.6,
+      "personality_modifiers": {
+        "when_mentioned": 0.95,
+        "when_chaos_needed": 0.8,
+        "when_energy_low": 0.7,
+        "after_ford_philosophical": 0.9,
+        "after_adam_chill": 0.8,
+        "just_replied": -0.4,
+        "conversation_too_orderly": 0.9
+      },
+      "reply_patterns": [
+        "Cannot resist jumping into boring conversations",
+        "Loves to disrupt serious moments",
+        "Feeds off others' energy",
+        "Creates conversational chaos"
+      ],
+      "conversation_style": "chaotic_interruptor"
+    },
+    
+    "AdamBot": {
+      "reply_probability_base": 0.4,
+      "personality_modifiers": {
+        "when_mentioned": 0.85,
+        "when_music_discussed": 0.8,
+        "when_timing_is_perfect": 0.9,
+        "after_april_chaos": 0.6,
+        "conversation_needs_rhythm": 0.7,
+        "been_active_recently": -0.3,
+        "good_setup_for_punchline": 0.95
+      },
+      "reply_patterns": [
+        "Waits for the perfect moment to drop in",
+        "Likes to establish rhythm in conversations",
+        "Often provides the punchline to others' setups",
+        "Goes silent when the vibe is off"
+      ],
+      "conversation_style": "rhythmic_opportunist"
+    }
+  },
+  
+  "interaction_dynamics": {
+    "ford_april": {
+      "description": "Ford's wisdom vs April's chaos",
+      "april_response_boost": 0.2,
+      "ford_patience_modifier": -0.1
+    },
+    "april_adam": {
+      "description": "April's chaos vs Adam's rhythm", 
+      "creates_comedy_gold": true,
+      "back_and_forth_boost": 0.15
+    },
+    "adam_ford": {
+      "description": "Adam's beats vs Ford's meditation",
+      "philosophical_music_discussions": 0.3,
+      "mutual_respect_modifier": 0.1
+    }
+  },
+  
+  "special_triggers": {
+    "roast_battle": {
+      "description": "When someone says 'roast battle', all bots become more active",
+      "probability_boost": 0.3,
+      "duration_minutes": 5
+    },
+    "philosophical_question": {
+      "description": "Deep questions make Ford more likely to respond",
+      "ford_boost": 0.4,
+      "april_disruption_chance": 0.6
+    },
+    "music_reference": {
+      "description": "Music references activate Adam",
+      "adam_boost": 0.5
+    },
+    "chaos_words": {
+      "keywords": ["chaos", "wild", "crazy", "insane", "circus"],
+      "april_boost": 0.4
+    }
+  }
+}
