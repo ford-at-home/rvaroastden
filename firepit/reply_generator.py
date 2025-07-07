@@ -146,6 +146,10 @@ class ReplyGenerator:
         """Generate a story or longer share"""
         personality = self.personalities[self.bot_name]
         
+        # Temporary fix for AprilBot - return a riff instead
+        if self.bot_name == 'AprilBot':
+            return self._generate_riff(context)
+        
         story_templates = {
             'AprilBot': [
                 "OKAY STORY TIME... so {time_ref} I was {action} and {twist} happened {emoji}",

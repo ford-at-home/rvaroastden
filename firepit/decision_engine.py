@@ -228,12 +228,16 @@ class ReplyTypeSelector:
         
     def _select_non_roast_type(self, health_state: ThreadHealthState) -> str:
         """Select reply type when roasting is off limits"""
-        options = ['riff', 'story', 'pivot', 'praise']
+        # Temporarily remove story for AprilBot due to generation issues
+        if self.bot_name == 'AprilBot':
+            options = ['riff', 'pivot', 'praise']
+        else:
+            options = ['riff', 'story', 'pivot', 'praise']
         
         # Weight based on what's needed
         if health_state.heat_score < 3:
             return 'pivot'  # Change topic
-        elif health_state.message_type_ratios.get('story', 0) < 0.1:
+        elif health_state.message_type_ratios.get('story', 0) < 0.1 and self.bot_name != 'AprilBot':
             return 'story'  # Add depth
         else:
             return random.choice(options)
@@ -242,7 +246,7 @@ class ReplyTypeSelector:
         """Normal reply type selection"""
         # Bot personality preferences
         preferences = {
-            'AprilBot': {'roast': 0.4, 'riff': 0.3, 'callback': 0.2, 'pivot': 0.1},
+            'AprilBot': {'roast': 0.4, 'riff': 0.4, 'callback': 0.15, 'pivot': 0.05},  # No story for now
             'AdamBot': {'riff': 0.3, 'story': 0.3, 'roast': 0.2, 'pivot': 0.2},
             'FordBot': {'story': 0.3, 'pivot': 0.3, 'roast': 0.2, 'riff': 0.2}
         }
