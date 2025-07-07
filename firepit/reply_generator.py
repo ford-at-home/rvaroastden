@@ -25,7 +25,12 @@ class ReplyGenerator:
         }
         
         generator = generators.get(reply_type, self._generate_riff)
-        return generator(context)
+        try:
+            return generator(context)
+        except Exception as e:
+            logger.error(f"Error in {reply_type} generation for {self.bot_name}: {e}", exc_info=True)
+            # Fallback to a simple riff
+            return self._generate_riff(context)
         
     def _load_personalities(self) -> Dict:
         """Load bot personality configurations"""
