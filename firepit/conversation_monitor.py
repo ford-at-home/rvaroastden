@@ -20,6 +20,9 @@ class FirepitConversationMonitor:
         self.scan_interval = 10  # Doubled: scan every 10 seconds instead of 5
         self.message_cache = {}  # channel_id -> List[message_dict]
         self.last_bot_messages = {}  # channel_id -> datetime
+        self.hourly_message_count = 0  # Track messages sent in current hour
+        self.hour_start_time = datetime.now(timezone.utc)
+        self.backoff_until = None  # When backoff period ends
         
         # Initialize components
         self.health_calculator = HealthCalculator()
@@ -70,6 +73,27 @@ class FirepitConversationMonitor:
     async def _check_channel(self, channel: discord.TextChannel):
         """Check a single channel for conversation activity"""
         try:
+            # Check hourly rate limit first
+            now = datetime.now(timezone.utc)
+            
+            # Reset hourly counter if new hour
+            if (now - self.hour_start_time).total_seconds() > 3600:
+                self.hourly_message_count = 0
+                self.hour_start_time = now
+                self.backoff_until = None  # Reset backoff
+                
+            # Check if in backoff period
+            if self.backoff_until and now < self.backoff_until:
+                logger.debug(f"{self.bot_name}: In backoff period until {self.backoff_until}")
+                return
+                
+            # Check if approaching rate limit
+            if self.hourly_message_count >= 10:
+                # Enter 1-hour backoff
+                self.backoff_until = now + timedelta(hours=1)
+                logger.info(f"{self.bot_name}: Rate limit reached (10 messages/hour), backing off until {self.backoff_until}")
+                return
+            
             # Get recent messages
             messages = []
             async for msg in channel.history(limit=20):
@@ -132,7 +156,10 @@ class FirepitConversationMonitor:
             # Update last message time
             self.last_bot_messages[channel.id] = datetime.now(timezone.utc)
             
-            logger.info(f"{self.bot_name} sent {reply_type} in {channel.name}")
+            # Increment hourly message count
+            self.hourly_message_count += 1
+            
+            logger.info(f"{self.bot_name} sent {reply_type} in {channel.name} (message {self.hourly_message_count}/10 this hour)")
             
         except Exception as e:
             logger.error(f"Error generating reply: {e}")

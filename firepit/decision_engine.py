@@ -30,7 +30,7 @@ class DecisionEngine:
             return False
             
         # Check dead air first - override user deference if it's been too long
-        if health_state.dead_air_seconds > 60:  # Doubled: 60 seconds before override
+        if health_state.dead_air_seconds > 120:  # 2 minutes before override
             logger.debug(f"{self.bot_name}: Dead air override - {health_state.dead_air_seconds}s")
             if self._should_break_silence(health_state):
                 return True
@@ -48,7 +48,7 @@ class DecisionEngine:
                 return True
                 
         # Check dead air
-        if health_state.dead_air_seconds > 8:  # Doubled: 8 seconds instead of 4
+        if health_state.dead_air_seconds > 15:  # 15 seconds of silence
             if self._should_break_silence(health_state):
                 logger.debug(f"{self.bot_name}: Breaking silence")
                 return True
@@ -129,14 +129,14 @@ class DecisionEngine:
         
     def _calculate_base_probability(self, health_state: ThreadHealthState) -> float:
         """Calculate base probability of speaking"""
-        # Start with bot personality base - halved for less noise
+        # Start with bot personality base - halved again for even less noise
         base_probs = {
-            'FordBot': 0.075,   # Was 0.15
-            'AprilBot': 0.05,   # Was 0.10
-            'AdamBot': 0.06     # Was 0.12
+            'FordBot': 0.0375,   # Was 0.075
+            'AprilBot': 0.025,   # Was 0.05
+            'AdamBot': 0.03      # Was 0.06
         }
         
-        prob = base_probs.get(self.bot_name, 0.05)
+        prob = base_probs.get(self.bot_name, 0.025)
         
         # Adjust based on conversation state
         if health_state.heat_score > 7:
@@ -144,7 +144,7 @@ class DecisionEngine:
         elif health_state.heat_score < 3:
             prob *= 0.8  # Less active in cold convos
             
-        return min(0.15, prob)  # Cap at 15% base (was 30%)
+        return min(0.075, prob)  # Cap at 7.5% base (was 15%)
 
 class ReplyTypeSelector:
     """Selects appropriate reply type based on context"""
