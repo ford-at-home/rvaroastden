@@ -15,7 +15,7 @@ from discord.ext import commands
 import boto3
 import aiohttp
 from aiohttp import web
-from conversation_monitor import ConversationMonitor
+from firepit.conversation_monitor import FirepitConversationMonitor
 
 # Configure logging
 logging.basicConfig(
@@ -118,8 +118,8 @@ class PersonalityBot(commands.Bot):
             )
         )
 
-        # Initialize conversation monitor
-        self.conversation_monitor = ConversationMonitor(self, self.personality)
+        # Initialize Firepit conversation monitor
+        self.conversation_monitor = FirepitConversationMonitor(self, self.personality)
         await self.conversation_monitor.start_monitoring()
 
         put_metric("BotReady", 1)
