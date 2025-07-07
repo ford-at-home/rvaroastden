@@ -17,7 +17,7 @@ class FirepitConversationMonitor:
     def __init__(self, bot: discord.Client, bot_name: str):
         self.bot = bot
         self.bot_name = bot_name
-        self.scan_interval = 5  # seconds
+        self.scan_interval = 10  # Doubled: scan every 10 seconds instead of 5
         self.message_cache = {}  # channel_id -> List[message_dict]
         self.last_bot_messages = {}  # channel_id -> datetime
         

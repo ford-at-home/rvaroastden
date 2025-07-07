@@ -13,8 +13,8 @@ class DecisionEngine:
     
     def __init__(self, bot_name: str):
         self.bot_name = bot_name
-        self.user_deference_turns = 3  # Pause after human speaks
-        self.max_quiet_turns = 10  # Speak if quiet for this many turns
+        self.user_deference_turns = 6  # Doubled: Pause after human speaks
+        self.max_quiet_turns = 20  # Doubled: Speak if quiet for this many turns
         self.jitter_factor = 0.2  # Random variation
         
     def should_speak(self, health_state: ThreadHealthState, 
@@ -22,8 +22,15 @@ class DecisionEngine:
                     last_bot_message_time: Optional[datetime]) -> bool:
         """Determine if this bot should speak now"""
         
+        # Check quiet hours first (8pm-8am EST)
+        now = datetime.now(timezone.utc)
+        est_hour = (now.hour - 5) % 24  # Convert to EST (UTC-5)
+        if est_hour >= 20 or est_hour < 8:  # 8pm to 8am
+            logger.debug(f"{self.bot_name}: Quiet hours - no speaking")
+            return False
+            
         # Check dead air first - override user deference if it's been too long
-        if health_state.dead_air_seconds > 30:  # 30 seconds is way too long
+        if health_state.dead_air_seconds > 60:  # Doubled: 60 seconds before override
             logger.debug(f"{self.bot_name}: Dead air override - {health_state.dead_air_seconds}s")
             if self._should_break_silence(health_state):
                 return True
@@ -41,7 +48,7 @@ class DecisionEngine:
                 return True
                 
         # Check dead air
-        if health_state.dead_air_seconds > 4:
+        if health_state.dead_air_seconds > 8:  # Doubled: 8 seconds instead of 4
             if self._should_break_silence(health_state):
                 logger.debug(f"{self.bot_name}: Breaking silence")
                 return True
@@ -122,14 +129,14 @@ class DecisionEngine:
         
     def _calculate_base_probability(self, health_state: ThreadHealthState) -> float:
         """Calculate base probability of speaking"""
-        # Start with bot personality base
+        # Start with bot personality base - halved for less noise
         base_probs = {
-            'FordBot': 0.15,   # Ford talks more
-            'AprilBot': 0.10,  # April is selective
-            'AdamBot': 0.12    # Adam is balanced
+            'FordBot': 0.075,   # Was 0.15
+            'AprilBot': 0.05,   # Was 0.10
+            'AdamBot': 0.06     # Was 0.12
         }
         
-        prob = base_probs.get(self.bot_name, 0.1)
+        prob = base_probs.get(self.bot_name, 0.05)
         
         # Adjust based on conversation state
         if health_state.heat_score > 7:
@@ -137,7 +144,7 @@ class DecisionEngine:
         elif health_state.heat_score < 3:
             prob *= 0.8  # Less active in cold convos
             
-        return min(0.3, prob)  # Cap at 30% base
+        return min(0.15, prob)  # Cap at 15% base (was 30%)
 
 class ReplyTypeSelector:
     """Selects appropriate reply type based on context"""
