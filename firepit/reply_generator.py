@@ -146,10 +146,6 @@ class ReplyGenerator:
         """Generate a story or longer share"""
         personality = self.personalities[self.bot_name]
         
-        # Temporary fix for AprilBot - return a riff instead
-        if self.bot_name == 'AprilBot':
-            return self._generate_riff(context)
-        
         story_templates = {
             'AprilBot': [
                 "OKAY STORY TIME... so {time_ref} I was {action} and {twist} happened {emoji}",
@@ -173,15 +169,24 @@ class ReplyGenerator:
         
         # Bot-specific fills
         if self.bot_name == 'AprilBot':
-            story = template.format(
-                time_ref=random.choice(['last week', 'yesterday', 'this morning']),
-                action=random.choice(['at Target', 'getting coffee', 'scrolling']),
-                twist=random.choice(['the WILDEST thing', 'you would not BELIEVE what', 'this person']),
-                event='I saw my ex',
-                reaction='DIED',
-                person='that one friend',
-                emoji=random.choice(['💀', '😭', '✋'])
-            )
+            # Prepare all possible parameters that might be needed by any template
+            params = {
+                'time_ref': random.choice(['last week', 'yesterday', 'this morning']),
+                'action': random.choice(['at Target', 'getting coffee', 'scrolling']),
+                'twist': random.choice(['the WILDEST thing', 'you would not BELIEVE what', 'this person']),
+                'event': random.choice(['I saw my ex', 'my order was wrong', 'the wifi went down']),
+                'reaction': random.choice(['DIED', 'SCREAMED', 'literally cried']),
+                'person': random.choice(['that one friend', 'my coworker', 'this random person']),
+                'emoji': random.choice(['💀', '😭', '✋'])
+            }
+            
+            # Use only the parameters that the template needs
+            try:
+                story = template.format(**params)
+            except KeyError as e:
+                # If a key is missing, just use a generic story
+                logger.warning(f"AprilBot story template missing key: {e}")
+                story = f"OKAY so {params['time_ref']} the most chaotic thing happened and I {params['reaction']} {params['emoji']}"
         elif self.bot_name == 'AdamBot':
             story = template.format(
                 time_ref=random.choice(['last quarter', 'in 2019', 'during the playoffs']),
