@@ -22,6 +22,12 @@ class DecisionEngine:
                     last_bot_message_time: Optional[datetime]) -> bool:
         """Determine if this bot should speak now"""
         
+        # Check dead air first - override user deference if it's been too long
+        if health_state.dead_air_seconds > 30:  # 30 seconds is way too long
+            logger.debug(f"{self.bot_name}: Dead air override - {health_state.dead_air_seconds}s")
+            if self._should_break_silence(health_state):
+                return True
+        
         # Check if user spoke recently (defer)
         if self._user_spoke_recently(recent_messages):
             logger.debug(f"{self.bot_name}: Deferring to user")
