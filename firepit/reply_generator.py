@@ -159,8 +159,8 @@ class ReplyGenerator:
             ]
         }
         
-        # Simple mad libs style generation
-        template = random.choice(story_templates[self.bot_name])
+        # Select a random template for this bot
+        template = random.choice(story_templates.get(self.bot_name, story_templates['FordBot']))
         
         # Bot-specific fills
         if self.bot_name == 'AprilBot':
