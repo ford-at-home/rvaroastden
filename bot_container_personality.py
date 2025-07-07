@@ -15,7 +15,7 @@ from discord.ext import commands
 import boto3
 import aiohttp
 from aiohttp import web
-from conversation_monitor import ConversationMonitor
+# from conversation_monitor import ConversationMonitor  # Temporarily disabled
 
 # Configure logging
 logging.basicConfig(
@@ -117,17 +117,17 @@ class PersonalityBot(commands.Bot):
         """Called when bot successfully connects to Discord"""
         logger.info(f"{self.personality} connected as {self.user} (ID: {self.user.id})")
 
-        # Initialize conversation monitor
-        self.conversation_monitor = ConversationMonitor(self, self.personality)
-        await self.conversation_monitor.start_monitoring()
+        # Initialize conversation monitor (temporarily disabled)
+        # self.conversation_monitor = ConversationMonitor(self, self.personality)
+        # await self.conversation_monitor.start_monitoring()
 
         put_metric("BotReady", 1)
 
     async def on_message(self, message: discord.Message):
         """Handle incoming messages"""
-        # First, let conversation monitor evaluate for autonomous replies
-        if self.conversation_monitor and not message.author.bot:
-            await self.conversation_monitor.on_message(message)
+        # First, let conversation monitor evaluate for autonomous replies (temporarily disabled)
+        # if self.conversation_monitor and not message.author.bot:
+        #     await self.conversation_monitor.on_message(message)
 
         # Then handle explicit commands/mentions
         # Ignore messages from any bot
