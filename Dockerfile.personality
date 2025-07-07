@@ -13,9 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy bot code
 COPY bot_container_personality.py .
-COPY bot_container_firepit.py .
 COPY conversation_monitor.py .
-COPY firepit_state_manager.py .
 COPY conversation_rules.json .
 COPY firepit/ ./firepit/
 COPY personalities/ ./personalities/
