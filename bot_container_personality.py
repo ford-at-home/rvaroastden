@@ -28,7 +28,7 @@ DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN")
 BOT_PERSONALITY = os.environ.get(
     "BOT_PERSONALITY", "FordBot"
 )  # FordBot, AprilBot, or AdamBot
-SQS_QUEUE_URL = os.environ.get("SQS_QUEUE_URL")
+SQS_QUEUE_URL = os.environ.get("SQS_QUEUE_URL") or os.environ.get("MESSAGE_QUEUE_URL")
 MEMORY_TABLE = os.environ.get("MEMORY_TABLE", "SimulchaosMemory")
 AWS_REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 
@@ -165,6 +165,10 @@ class PersonalityBot(commands.Bot):
 
 def send_to_sqs(message_data: Dict[str, Any]) -> bool:
     """Send message to SQS for processing"""
+    if not SQS_QUEUE_URL:
+        logger.warning("SQS not configured - skipping message send")
+        return False
+        
     try:
         # Always use our personality
         message_data["bot_name"] = BOT_PERSONALITY
@@ -372,8 +376,8 @@ if __name__ == "__main__":
         exit(1)
 
     if not SQS_QUEUE_URL:
-        logger.error("SQS_QUEUE_URL not set in environment")
-        exit(1)
+        logger.warning("SQS_QUEUE_URL not set - bot will run without SQS integration")
+        # Don't exit - let bot run without SQS
 
     logger.info(
         f"Starting {BOT_PERSONALITY} with token ending in ...{DISCORD_TOKEN[-6:]}"
