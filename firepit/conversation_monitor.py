@@ -1,7 +1,7 @@
 """Main conversation monitor for Firepit Discord integration"""
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 import discord
 
@@ -121,7 +121,7 @@ class FirepitConversationMonitor:
                 await channel.send(reply)
                 
             # Update last message time
-            self.last_bot_messages[channel.id] = datetime.utcnow()
+            self.last_bot_messages[channel.id] = datetime.now(timezone.utc)
             
             logger.info(f"{self.bot_name} sent {reply_type} in {channel.name}")
             

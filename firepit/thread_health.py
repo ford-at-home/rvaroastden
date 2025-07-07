@@ -1,5 +1,5 @@
 """Thread health state monitoring for Firepit Discord Agent"""
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 import logging
@@ -38,7 +38,7 @@ class HealthCalculator:
         if not messages:
             return ThreadHealthState()
             
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         recent_messages = messages[-self.message_window:]
         
         # Calculate dead air
@@ -104,7 +104,7 @@ class HealthCalculator:
             return 0.0
             
         heat = 0.0
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         
         for msg in messages:
             msg_time = datetime.fromisoformat(msg['timestamp'])

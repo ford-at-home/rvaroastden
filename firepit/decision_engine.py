@@ -1,6 +1,6 @@
 """Decision engine for bot participation in conversations"""
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 import logging
 
@@ -181,7 +181,7 @@ class ReplyTypeSelector:
         
     def _should_callback(self, messages: List[Dict]) -> bool:
         """Check if callback would be good"""
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         
         # Look for callback opportunities (15+ min old references)
         for msg in messages[:-5]:  # Not too recent
