@@ -19,6 +19,8 @@
 4. Add error handling with fallback to reply generator
 5. Emergency fix: bypass story generation for AprilBot
 6. Reduce bot chattiness by 50% more: rate limit 10msg/hr, lower probabilities, longer silence thresholds
+7. **NEW**: Fix AprilBot story generation with proper template handling
+8. **NEW**: Fix cdk.json to use python3 command
 
 ### Current Bot Configuration:
 - **Scan interval**: 10 seconds (was 5)
@@ -34,20 +36,27 @@
 - **Topic coherence**: Minimum 3 exchanges before allowing topic change
 
 ### Known Issues:
-1. **AprilBot story generation bug**: Template placeholders don't match format() keys
-   - Temporary fix: Bypass story generation, return riff instead
-   - Permanent fix needed: Align template placeholders with format keys
+1. **AprilBot story generation bug**: ✅ FIXED
+   - Added all possible template parameters
+   - Try/except handles missing keys gracefully
+   - Fallback to generic story if template fails
 
-2. **CloudWatch permissions**: All bots lack PutMetricData permission
-   - Non-critical, just creates log noise
+2. **CloudWatch permissions**: ✅ ALREADY FIXED
+   - PutMetricData permission already present in CDK stack
 
 3. **Docker build failures**: Rate limits causing intermittent CodeBuild failures
    - Workaround: Retry builds until successful
+
+4. **CDK deployment**: AWS credentials not configured in current environment
+   - Need proper AWS profile or credentials to deploy
 
 ## Last Successful Build
 - Build ID: firepit-discord-bot-build:6e442c88-0e93-458a-9ce1-da789af0832f
 - Contains: Emergency fix for AprilBot story generation
 - Does NOT contain: Latest rate limiting (10 msg/hr)
+- Code pushed to GitHub, needs new build to include:
+  - Proper AprilBot story generation fix
+  - All latest rate limiting changes
 
 ## To Resume:
 
