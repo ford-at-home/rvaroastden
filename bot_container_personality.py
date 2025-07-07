@@ -94,12 +94,6 @@ class PersonalityBot(commands.Bot):
     async def setup_hook(self):
         """Called when bot is starting up"""
         logger.info(f"Starting {self.personality} bot...")
-        # Set custom status
-        await self.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.watching, name=personality_cfg["status"]
-            )
-        )
         # Start periodic tasks
         self.loop.create_task(self.periodic_metrics())
 
@@ -116,6 +110,13 @@ class PersonalityBot(commands.Bot):
     async def on_ready(self):
         """Called when bot successfully connects to Discord"""
         logger.info(f"{self.personality} connected as {self.user} (ID: {self.user.id})")
+        
+        # Set custom status
+        await self.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.watching, name=personality_cfg["status"]
+            )
+        )
 
         # Initialize conversation monitor (temporarily disabled)
         # self.conversation_monitor = ConversationMonitor(self, self.personality)
@@ -365,7 +366,7 @@ async def main():
         logger.error(f"Bot crashed: {e}")
         put_metric("BotCrash", 1)
     finally:
-        health_server.stop()
+        await health_server.stop()
         await bot.close()
 
 
