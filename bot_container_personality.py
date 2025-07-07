@@ -19,9 +19,11 @@ from firepit.conversation_monitor import FirepitConversationMonitor
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+# Set firepit to DEBUG
+logging.getLogger('firepit').setLevel(logging.DEBUG)
 
 # Environment variables
 DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN")

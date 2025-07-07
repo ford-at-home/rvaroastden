@@ -49,13 +49,17 @@ class FirepitConversationMonitor:
         """Main monitoring loop that runs every 5 seconds"""
         while self._running:
             try:
+                logger.debug(f"Monitor loop running - {len(self.bot.guilds)} guilds")
                 # Monitor all active channels
                 for guild in self.bot.guilds:
+                    logger.debug(f"Checking guild: {guild.name}")
                     for channel in guild.text_channels:
                         # Skip channels we can't read
                         if not channel.permissions_for(guild.me).read_messages:
+                            logger.debug(f"Skipping {channel.name} - no read permissions")
                             continue
                             
+                        logger.debug(f"Checking channel: {channel.name}")
                         await self._check_channel(channel)
                         
             except Exception as e:
@@ -83,11 +87,16 @@ class FirepitConversationMonitor:
             
             # Decide if we should speak
             last_bot_msg = self.last_bot_messages.get(channel.id)
+            logger.debug(f"Health state: dead_air={health_state.dead_air_seconds}s, heat={health_state.heat_score}")
+            
             should_speak = self.decision_engine.should_speak(
                 health_state, messages, last_bot_msg
             )
             
+            logger.debug(f"Should speak decision: {should_speak}")
+            
             if should_speak:
+                logger.info(f"Bot decided to speak in {channel.name}")
                 await self._generate_and_send_reply(channel, health_state, messages)
                 
         except Exception as e:
