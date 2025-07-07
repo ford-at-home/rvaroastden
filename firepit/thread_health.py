@@ -43,7 +43,7 @@ class HealthCalculator:
         
         # Calculate dead air
         if recent_messages:
-            last_msg_time = datetime.fromisoformat(recent_messages[-1]['timestamp'])
+            last_msg_time = datetime.fromisoformat(recent_messages[-1]['timestamp'].replace('Z', '+00:00'))
             dead_air_seconds = int((now - last_msg_time).total_seconds())
         else:
             dead_air_seconds = 999
@@ -107,7 +107,7 @@ class HealthCalculator:
         now = datetime.now(timezone.utc)
         
         for msg in messages:
-            msg_time = datetime.fromisoformat(msg['timestamp'])
+            msg_time = datetime.fromisoformat(msg['timestamp'].replace('Z', '+00:00'))
             age_minutes = (now - msg_time).total_seconds() / 60
             
             # Base heat from message
@@ -169,5 +169,5 @@ class HealthCalculator:
         for msg in reversed(messages):
             content = msg.get('content', '').lower()
             if any(phrase in content for phrase in ['what if', 'actually', 'real talk', 'anyway']):
-                return datetime.fromisoformat(msg['timestamp'])
+                return datetime.fromisoformat(msg['timestamp'].replace('Z', '+00:00'))
         return None

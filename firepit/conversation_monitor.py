@@ -130,13 +130,18 @@ class FirepitConversationMonitor:
             
     def _message_to_dict(self, msg: discord.Message) -> Dict:
         """Convert Discord message to dict format"""
+        # Ensure timestamp is timezone-aware
+        timestamp = msg.created_at
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
+            
         return {
             'message_id': str(msg.id),
             'channel_id': str(msg.channel.id),
             'author_id': str(msg.author.id),
             'author_name': msg.author.name,
             'content': msg.content,
-            'timestamp': msg.created_at.isoformat(),
+            'timestamp': timestamp.isoformat(),
             'is_bot': msg.author.bot,
             'mentions': [m.name for m in msg.mentions],
             'reference': str(msg.reference.message_id) if msg.reference else None

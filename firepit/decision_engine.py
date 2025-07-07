@@ -185,7 +185,7 @@ class ReplyTypeSelector:
         
         # Look for callback opportunities (15+ min old references)
         for msg in messages[:-5]:  # Not too recent
-            msg_time = datetime.fromisoformat(msg['timestamp'])
+            msg_time = datetime.fromisoformat(msg['timestamp'].replace('Z', '+00:00'))
             if (now - msg_time).total_seconds() > 900:  # 15 minutes
                 if random.random() < 0.2:  # 20% chance
                     return True
@@ -203,7 +203,7 @@ class ReplyTypeSelector:
             
         # Been too long since pivot
         if health_state.last_pivot_timestamp:
-            mins_since_pivot = (datetime.utcnow() - health_state.last_pivot_timestamp).total_seconds() / 60
+            mins_since_pivot = (datetime.now(timezone.utc) - health_state.last_pivot_timestamp).total_seconds() / 60
             if mins_since_pivot > 30:
                 return True
                 
