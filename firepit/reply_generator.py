@@ -208,7 +208,35 @@ class ReplyGenerator:
     def _generate_pivot(self, context: Dict) -> str:
         """Generate a topic pivot"""
         personality = self.personalities[self.bot_name]
+        health_state = context.get('health_state')
         
+        # Check if pivot is too soon
+        if health_state and health_state.topic_message_count < 6:
+            # Return a meta comment about staying on topic
+            early_pivot_responses = {
+                'AprilBot': [
+                    "WAIT we're not done with this yet!!!",
+                    "hold up bestie we JUST started talking about this",
+                    "no no no finish your thought first",
+                    "THE WHIPLASH... can we stay on topic for TWO seconds"
+                ],
+                'AdamBot': [
+                    "Actually, let's explore this topic further first.",
+                    "Hold on - we haven't fully analyzed this yet.",
+                    "Statistical anomaly detected: topic change too rapid.",
+                    "Let's complete this thought trajectory."
+                ],
+                'FordBot': [
+                    "Now hold on there, we're not done with this yet.",
+                    "Let's finish this conversation first, like we used to.",
+                    "Slow down partner, one thing at a time.",
+                    "Back in my day, we finished our thoughts."
+                ]
+            }
+            
+            return random.choice(early_pivot_responses.get(self.bot_name, early_pivot_responses['FordBot']))
+        
+        # Normal pivot templates for when it's appropriate
         pivot_templates = {
             'AprilBot': [
                 "ANYWAY moving on from that disaster...",

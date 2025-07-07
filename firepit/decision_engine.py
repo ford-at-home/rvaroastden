@@ -206,6 +206,10 @@ class ReplyTypeSelector:
         
     def _needs_tone_reset(self, health_state: ThreadHealthState) -> bool:
         """Check if conversation needs tone reset"""
+        # Check topic coherence first - need 3 exchanges minimum
+        if health_state.topic_message_count < 6:  # 3 exchanges = ~6 messages
+            return False  # Don't pivot yet
+            
         # Too much roasting
         if health_state.message_type_ratios.get('roast', 0) > 0.6:
             return True

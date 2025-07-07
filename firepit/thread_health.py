@@ -16,6 +16,8 @@ class ThreadHealthState:
     dominant_speaker: Optional[str] = None
     message_type_ratios: Dict[str, float] = None
     last_pivot_timestamp: Optional[datetime] = None
+    current_topic: Optional[str] = None
+    topic_message_count: int = 0
     
     def __post_init__(self):
         if self.message_type_ratios is None:
@@ -88,6 +90,9 @@ class HealthCalculator:
         # Find last pivot
         last_pivot_timestamp = self._find_last_pivot(recent_messages)
         
+        # Track current topic
+        current_topic, topic_message_count = self._track_current_topic(recent_messages)
+        
         return ThreadHealthState(
             dead_air_seconds=dead_air_seconds,
             heat_score=heat_score,
@@ -95,7 +100,9 @@ class HealthCalculator:
             quiet_bot=quiet_bot,
             dominant_speaker=dominant_speaker,
             message_type_ratios=message_type_ratios,
-            last_pivot_timestamp=last_pivot_timestamp
+            last_pivot_timestamp=last_pivot_timestamp,
+            current_topic=current_topic,
+            topic_message_count=topic_message_count
         )
         
     def _calculate_heat_score(self, messages: List[Dict]) -> float:
@@ -171,3 +178,27 @@ class HealthCalculator:
             if any(phrase in content for phrase in ['what if', 'actually', 'real talk', 'anyway']):
                 return datetime.fromisoformat(msg['timestamp'].replace('Z', '+00:00'))
         return None
+        
+    def _track_current_topic(self, messages: List[Dict]) -> tuple[Optional[str], int]:
+        """Track the current topic and how many messages have discussed it"""
+        if not messages:
+            return None, 0
+            
+        # Simple topic extraction - look for recurring themes/words
+        topic_words = {}
+        
+        # Look at last 10 messages
+        for msg in messages[-10:]:
+            content = msg.get('content', '').lower()
+            # Extract meaningful words (simple approach)
+            words = [w for w in content.split() if len(w) > 4 and not w.startswith('http')]
+            for word in words:
+                topic_words[word] = topic_words.get(word, 0) + 1
+                
+        # Find most common topic word
+        if topic_words:
+            current_topic = max(topic_words, key=topic_words.get)
+            topic_count = topic_words[current_topic]
+            return current_topic, topic_count
+            
+        return None, 0
